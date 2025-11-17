@@ -1,141 +1,106 @@
 import one from "../../assets/one.png";
 import { Link } from "react-router";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { FaArrowLeft } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
-// import { useSelector } from "react-redux";
 import { getDatabase, ref, onValue, push, remove } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-
 const UserList = () => {
-
-  const data = useSelector((state)=> state.userInfo.value.user)
-  console.log(data);
-
+  const data = useSelector((state) => state.userInfo.value.user);
   const db = getDatabase();
-  const requestRef = ref(db,"FriendRequest/")
-  const [requestList,setRequestList] = useState ([])
+  const requestRef = ref(db, "FriendRequest/");
+  const [requestList, setRequestList] = useState([]);
 
-  useEffect(()=> {
-    onValue(requestRef,(snapshot)=> {
-      let arr = []
-      snapshot.forEach((item)=> {
-        console.log(item);
-        if (data.uid == item.val().reciverId) {
-           arr.push(item.val())
+  useEffect(() => {
+    onValue(requestRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if (data.uid === item.val().reciverId) {
+          arr.push(item.val());
         }
-       
-      })
-      setRequestList(arr)
-    })
-  },[])
+      });
+      setRequestList(arr);
+    });
+  }, [data.uid]);
 
+  const confirmRequest = (item) => {
+    push(ref(db, "RequestAccept/"), {
+      reciverName: item.reciverName,
+      reciverId: item.reciverId,
+      senderName: item.senderName,
+      senderId: item.senderId,
+    });
+    remove(ref(db, "FriendRequest/"));
+  };
 
-  const confromRequest = (item)=> {
-    console.log(item,'uiktd');
-    
-    push(ref(db,"RequestAccept/"),{
-      reciverName:item.reciverName,
-      reciverId:item.reciverId,
-      senderName:item.senderName,
-      senderId:item.senderId
-    })
-    remove(ref(db,"FriendRequest/"))
-  }
-
-  
   return (
-    <div>
-     
+    <div className="px-4 sm:px-6 md:px-10">
+      {/* Header */}
+      <div className="flex justify-center mr-50 gap-4 py-3">
+        <Link to="/main">
+          <MdArrowBackIosNew className="text-2xl sm:text-3xl" />
+        </Link>
+        <h3 className="font-bold text-xl sm:text-2xl md:text-3xl">Friends</h3>
+      </div>
 
-       <div className="flex items-center justify-center py-3 gap-5">
-        <Link to= "/main"><p className="font-bold text-[30px]"><MdArrowBackIosNew/></p></Link>
-        <h3 className="font-bold text-[30px]">Friends</h3>
-       </div>
+      {/* Tabs */}
+      <div className="flex justify-center gap-4 sm:gap-10 py-4 flex-wrap">
+        <Link to="/suggestion">
+          <h2 className="bg-black/20 px-6 sm:px-14 py-2 rounded-full font-bold text-sm sm:text-base">
+            Suggestions
+          </h2>
+        </Link>
+        <Link to="/friends">
+          <h1 className="bg-black/20 px-6 sm:px-14 py-2 rounded-full font-bold text-sm sm:text-base">
+            Your Friends
+          </h1>
+        </Link>
+      </div>
 
-       <div className="flex justify-center gap-10 py-10 items-center">
-       <Link to = "/suggestion"><h2 className="bg-black/20 px-14 py-2.5 rounded-full font-bold">Suggestions</h2></Link>        
-       <Link to = "/friends"><h1 className="bg-black/20 px-14 py-2.5 rounded-full font-bold">your friend</h1></Link>
-       </div>
-{/* ---------------------------------------------------friends------------------------------------------------------- */}
+      {/* Friends List */}
+      <div className="flex justify-center">
+        <div className="mt-6 w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-2xl shadow-md">
+          <div className="py-4 px-4 sm:px-6">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-base sm:text-lg md:text-xl font-semibold">
+                People you may know
+              </p>
+              <BsThreeDotsVertical className="text-xl sm:text-2xl" />
+            </div>
 
-       <div className="flex justify-center">
-        <div
-                className="  mt-[35px] w-[600px]  bg-white rounded-[20px] 
-                              shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] ">
-                <div className="py-[13px] px-[20px] font-third ">
-        
-        
-                  <div className="flex justify-between mt-5">
-                    <p className="text-[20px] font-semibold">People your know may</p>
-                    <span>
-                      <BsThreeDotsVertical className="text-[#1E1E1E] font-bold" />
-                    </span>
+            <div className="px-2 overflow-y-auto max-h-[400px] sm:max-h-[450px]">
+              {requestList.map((user, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-3 border-b border-gray-300 pb-3"
+                >
+                  <div className="flex items-center gap-4">
+                    <img src={one} alt="" className="h-12 w-12 sm:h-14 sm:w-14 rounded-full" />
+                    <div>
+                      <h3 className="font-semibold text-sm sm:text-base">{user.senderName}</h3>
+                    </div>
                   </div>
 
-                   <div className="px-2 overflow-y-scroll userlist h-[455px]">
-                  {
-                    requestList.map((user)=> (
-                      <div
-                    className="flex mt-2.5 items-center justify-between border-b-1 border-[#00000040] 
-                                  border-w-[100px] ">
-        
-        
-                    <div className="mb-[0px] flex items-center gap-6">
-                      <div className="mb-[10px]">
-                        <img src={one} alt="" />
-                        
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-[14px] text-[#000000]">
-                          {user.senderName}
-                        </h3>
-                        {/* <h6 className="text-[#4D4D4DBF] text-[12px] font-medium">
-                          Today, 8:56pm
-                        </h6> */}
-                      </div>
-                    </div>
-        
-        
-        
-                    <div className="flex gap-10">
-                      <div>
-                        <button 
-                        onClick={()=>confromRequest(user)}
-                        className=" cursor-pointer py-2.5 px-14 rounded-2xl bg-[#0866FF] text-white font-semibold">
-                          Confrom
-                        </button>
-                      </div>
-                      <div>
-                        <button className=" px-14 rounded-2xl py-2.5 bg-black/10 font-semibold cursor-pointer ">
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-        
-        
+                  <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0">
+                    <button
+                      onClick={() => confirmRequest(user)}
+                      className="cursor-pointer py-2 px-6 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base"
+                    >
+                      Confirm
+                    </button>
+                    <button className="px-6 sm:px-10 py-2 rounded-2xl bg-black/10 font-semibold text-sm sm:text-base cursor-pointer">
+                      Delete
+                    </button>
                   </div>
-
-                    ))
-                  }
-                 </div>
-        
-        
-                  
-
-
                 </div>
-              </div>
-       </div>
-
-
-
-
-
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

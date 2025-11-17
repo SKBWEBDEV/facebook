@@ -1,18 +1,20 @@
+import facebook from "../../assets/facebook.png";
+import { Link } from "react-router";
 
-import facebook from "../../assets/facebook.png"
-
-import { Link } from "react-router"
-
-
-const home = () => {
+const Home = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen px-4 sm:px-6">
       <div>
-        <Link to = "/sign"><img  className="h-100" src={facebook} alt="" /></Link>
-        
+        <Link to="/sign">
+          <img
+            className="h-24 sm:h-32 md:h-40 w-auto mx-auto"
+            src={facebook}
+            alt="Facebook Logo"
+          />
+        </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default home
+export default Home;

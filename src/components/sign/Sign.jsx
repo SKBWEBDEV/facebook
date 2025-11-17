@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import { getDatabase, ref, set } from "firebase/database";
-const sign = () => {
+
+const Sign = () => {
   const [email, setEmail] = useState("");
   const [errorEmail, setEmailError] = useState("");
 
@@ -18,9 +18,7 @@ const sign = () => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
-
-   const db = getDatabase();
-  
+  const db = getDatabase();
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -38,57 +36,35 @@ const sign = () => {
   };
 
   const handleClick = () => {
-    console.log(email);
-
-    if (!email) {
-      setEmailError("right email requerd");
-    }
-
-    if (!name) {
-      setNameError("right name requerd");
-    }
-
-    if (!password) {
-      setPasswordError("right password requerd");
-    }
+    if (!email) setEmailError("Right email required");
+    if (!name) setNameError("Right name required");
+    if (!password) setPasswordError("Right password required");
 
     if (email && name && password) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((user) => {
-          console.log(user);
-          sendEmailVerification(auth.currentUser)
-          updateProfile(auth.currentUser, {
-           displayName: name
-          })
-          toast.success("sign in success fully done & plase veryfi your email");
-          set(ref(db, 'users/'+user.user.uid), {
-             username: name,
-             email: email,
-             password: password
-             });
-          setTimeout(() => {
-            navigate("/login");
-          }, 3000);
+          sendEmailVerification(auth.currentUser);
+          updateProfile(auth.currentUser, { displayName: name });
+          toast.success("Sign up successful & please verify your email");
+          set(ref(db, "users/" + user.user.uid), { username: name, email, password });
+          setTimeout(() => navigate("/login"), 3000);
         })
         .finally(() => {
           setEmail("");
           setName("");
           setPassword("");
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          toast.error("this email allready used");
-        });
+        .catch(() => toast.error("This email is already used"));
     }
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center px-4 sm:px-6 md:px-20 lg:px-40">
       <div>
-        <h1 className="text-[#11175D] font-bold text-[34px]">
+        <h1 className="text-[#11175D] font-bold text-2xl sm:text-3xl md:text-4xl">
           Get started with easily register
         </h1>
-        <p className="text-[#000000]/25 font-normal text-[20px]">
+        <p className="text-[#000000]/50 font-normal text-base sm:text-lg md:text-xl">
           Free register and you can enjoy it
         </p>
       </div>
@@ -107,48 +83,51 @@ const sign = () => {
         transition={Slide}
       />
 
+      {/* Email */}
       <div className="mt-5 relative">
         <input
           onChange={handleEmail}
           value={email}
-          className="border text-center outline-0 pl-10 pr-38 py-[17px] rounded-2xl"
+          className="border text-center outline-0 px-4 py-3 sm:py-4 rounded-2xl w-full sm:w-96"
           type="text"
           placeholder="Email-Address"
         />
-        <span className="absolute top-[-13px] left-180 bg-white px-5">
+        <span className="absolute -top-3 md:left-165 left-5 bg-white px-2 text-sm sm:text-base">
           Email Address
         </span>
-        <p className="mt-2">{errorEmail}</p>
+        <p className="mt-2 text-red-500 text-sm">{errorEmail}</p>
       </div>
 
+      {/* Full Name */}
       <div className="mt-5 relative">
         <input
           onChange={handleName}
           value={name}
-          className="border text-center outline-0 pl-10 pr-38 py-[17px] rounded-2xl"
+          className="border text-center outline-0 px-4 py-3 sm:py-4 rounded-2xl w-full sm:w-96"
           type="text"
-          placeholder="Ful name"
+          placeholder="Full Name"
         />
-        <span className="absolute top-[-13px] left-185 bg-white px-5">
-          Ful name
+        <span className="absolute -top-3 md:left-170 left-5 bg-white px-2 text-sm sm:text-base">
+          Full Name
         </span>
-        <p className="mt-2">{errorName}</p>
+        <p className="mt-2 text-red-500 text-sm">{errorName}</p>
       </div>
 
+      {/* Password */}
       <div className="mt-5 relative">
         <input
           onChange={handlePassword}
           value={password}
-          className="border text-center outline-0 pl-10 pr-38 py-[17px] rounded-2xl"
+          className="border text-center outline-0 px-4 py-3 sm:py-4 rounded-2xl w-full sm:w-96"
           type={show ? "text" : "password"}
           placeholder="Password"
         />
-        <span className="absolute top-[-13px] left-185 bg-white px-5">
+        <span className="absolute -top-3 md:left-170 left-5 bg-white px-2 text-sm sm:text-base">
           Password
         </span>
-        <p className="mt-2">{errorPassword}</p>
+        <p className="mt-2 text-red-500 text-sm">{errorPassword}</p>
 
-        <div className="absolute top-6 left-[57%]">
+        <div className="absolute top-3 right-5 cursor-pointer text-lg sm:text-xl">
           {show ? (
             <FaEyeSlash onClick={() => setShow(!show)} />
           ) : (
@@ -157,29 +136,32 @@ const sign = () => {
         </div>
       </div>
 
+      {/* Button */}
       <div className="mt-5">
         <button
           onClick={handleClick}
-          className="cursor-pointer bg-black text-white px-[150px] py-5 rounded-full"
+          className="cursor-pointer bg-black text-white w-full sm:w-96 py-3 sm:py-4 rounded-full text-base sm:text-lg"
         >
           Sign up
         </button>
       </div>
 
-      <div className="mt-5">
-        <p className="">
-          Already have an account ?{" "}
+      {/* Login Link */}
+      <div className="mt-5 text-sm sm:text-base">
+        <p>
+          Already have an account?{" "}
           <Link to="/login">
-            <span className="text-[#EA6C00] cursor-pointer">Sign I n</span>
+            <span className="text-[#EA6C00] cursor-pointer">Sign In</span>
           </Link>
         </p>
       </div>
 
-      <div className="mt-10 text-rose-700 font-bold">
+      {/* Home Link */}
+      <div className="mt-10 text-rose-700 font-bold text-sm sm:text-base">
         <Link to="/">Go to home</Link>
       </div>
     </div>
   );
 };
 
-export default sign;
+export default Sign;
