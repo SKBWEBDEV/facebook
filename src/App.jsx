@@ -1,16 +1,16 @@
 import "./App.css";
 import Home from "./components/home/Home"
 import firebaseConfig from "./components/firebase/firebaseConfig";
-import Sign from "./components/signup/sign";
 import Login from "./components/Login/Log";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Forgote from "./components/forgote/forgote";
+import Forgote from "./components/forgote/Forgote";
 import Main from "./components/main/Main";
 import Logout from "./components/logout/Logout";
 import UserList from "./components/users/UserList";
 import Suggestions from "./components/suggestions/Suggestions";
 import Friends from "./components/friends/Friends";
+import Sign from "./components/sign/Sign";
 function App() {
   const router = createBrowserRouter([
     {
@@ -25,10 +25,11 @@ function App() {
       path: "/sign",
       element: (
         <div>
-          <Sign />
+          <Sign/>
         </div>
       ),
     },
+   
     {
       path: "/login",
       element: (
