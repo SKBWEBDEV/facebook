@@ -1,7 +1,6 @@
-import "./App.css";
+
 import Home from "./components/home/Home"
 import firebaseConfig from "./components/firebase/firebaseConfig";
-import Login from "./components/Login/Log";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import Forgote from "./components/forgote/Forgote";
@@ -11,6 +10,7 @@ import UserList from "./components/users/UserList";
 import Suggestions from "./components/suggestions/Suggestions";
 import Friends from "./components/friends/Friends";
 import Sign from "./components/sign/Sign";
+import Log from "./components/log/Log";
 function App() {
   const router = createBrowserRouter([
     {
@@ -34,7 +34,7 @@ function App() {
       path: "/login",
       element: (
         <div>
-          <Login />
+          <Log />
         </div>
       ),
     },
