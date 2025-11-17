@@ -10,7 +10,6 @@ import Suggestions from "./components/suggestions/Suggestions";
 import Friends from "./components/friends/Friends";
 import Sign from "./components/sign/Sign";
 import Log from "./components/log/Log";
-import Forgote from "./components/forgote/Forgote";
 function App() {
   const router = createBrowserRouter([
     {
@@ -75,14 +74,6 @@ function App() {
       element: (
         <div>
           <Logout />
-        </div>
-      ),
-    },
-    {
-      path: "/forgote",
-      element: (
-        <div>
-          <Forgote />
         </div>
       ),
     },
