@@ -10,6 +10,7 @@ import Suggestions from "./components/suggestions/Suggestions";
 import Friends from "./components/friends/Friends";
 import Sign from "./components/sign/Sign";
 import Log from "./components/log/Log";
+import BlockUser from "./components/blockUser/BlockUser";
 function App() {
   const router = createBrowserRouter([
     {
@@ -66,6 +67,14 @@ function App() {
       element: (
         <div>
           <Friends />
+        </div>
+      ),
+    },
+    {
+      path: "/blockuser",
+      element: (
+        <div>
+          <BlockUser />
         </div>
       ),
     },

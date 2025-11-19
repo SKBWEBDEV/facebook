@@ -2,7 +2,7 @@ import one from "../../assets/one.png";
 import { Link } from "react-router";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, push, remove } from "firebase/database";
+import { getDatabase, ref, onValue, push, remove, set } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -16,22 +16,26 @@ const UserList = () => {
     onValue(requestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid === item.val().reciverId) {
-          arr.push(item.val());
+        console.log(item.val());
+        
+        if (data.uid == item.val().reciverId) {
+          arr.push({...item.val(), requestId: item.key});
         }
       });
       setRequestList(arr);
     });
   }, [data.uid]);
+  console.log(requestList);
+  
 
   const confirmRequest = (item) => {
-    push(ref(db, "RequestAccept/"), {
+    set(push(ref(db, "RequestAccept/")), {
       reciverName: item.reciverName,
       reciverId: item.reciverId,
       senderName: item.senderName,
       senderId: item.senderId,
     });
-    remove(ref(db, "FriendRequest/"));
+    remove(ref(db, "FriendRequest/" +item.requestId));
   };
 
   return (
@@ -56,6 +60,11 @@ const UserList = () => {
             Your Friends
           </h1>
         </Link>
+        <Link to="/blockuser">
+          <h1 className="bg-black/20 px-6 sm:px-14 py-2 rounded-full font-bold text-sm sm:text-base">
+            Block User
+          </h1>
+        </Link>
       </div>
 
       {/* Friends List */}
@@ -64,7 +73,7 @@ const UserList = () => {
           <div className="py-4 px-4 sm:px-6">
             <div className="flex justify-between items-center mb-4">
               <p className="text-base sm:text-lg md:text-xl font-semibold">
-                People you may know
+                Friend Request
               </p>
               <BsThreeDotsVertical className="text-xl sm:text-2xl" />
             </div>
@@ -85,7 +94,8 @@ const UserList = () => {
                   <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0">
                     <button
                       onClick={() => confirmRequest(user)}
-                      className="cursor-pointer py-2 px-6 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base"
+                      className="cursor-pointer py-2 px-6 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm 
+                      sm:text-base"
                     >
                       Confirm
                     </button>
