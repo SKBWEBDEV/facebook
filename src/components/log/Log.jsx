@@ -6,6 +6,7 @@ import { Slide, ToastContainer, toast } from "react-toastify";
 import { motion } from "motion/react";
 import { useDispatch } from "react-redux";
 import { userInfo } from "../slicess/counterSlice";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Log = () => {
   const provider = new GoogleAuthProvider();
@@ -13,6 +14,8 @@ const Log = () => {
   const [errorEmail, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [errorPassword, setPasswordError] = useState("");
+
+  const [show, setShow] = useState(false);
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -117,13 +120,16 @@ const Log = () => {
             onChange={handlePassword}
             value={password}
             className="border text-center outline-0 px-4 py-3 sm:py-4 rounded-2xl w-full"
-            type="password"
+            type={show ? "text" : "password"}
             placeholder="Password"
           />
           <span className="absolute -top-3 left-3 bg-white px-2 text-sm sm:text-base">
             Password
           </span>
           <p className="mt-2 text-red-500 text-sm">{errorPassword}</p>
+           <div className="absolute top-4 right-4 cursor-pointer text-xl">
+                      {show ? <FaEyeSlash onClick={() => setShow(!show)} /> : <FaEye onClick={() => setShow(!show)} />}
+                    </div>
         </div>
 
         {/* Sign In Button */}
