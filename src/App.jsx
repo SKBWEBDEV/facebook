@@ -1,5 +1,4 @@
-
-import Home from "./components/home/Home"
+import Home from "./components/home/Home";
 import firebaseConfig from "./components/firebase/firebaseConfig";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -11,6 +10,8 @@ import Friends from "./components/friends/Friends";
 import Sign from "./components/sign/Sign";
 import Log from "./components/log/Log";
 import BlockUser from "./components/blockUser/BlockUser";
+import MainGroupPage from "./components/maingroup/MainGroupPage";
+import CreatGroup from "./components/createGroup/CreatGroup";
 function App() {
   const router = createBrowserRouter([
     {
@@ -25,11 +26,11 @@ function App() {
       path: "/sign",
       element: (
         <div>
-          <Sign/>
+          <Sign />
         </div>
       ),
     },
-   
+
     {
       path: "/login",
       element: (
@@ -54,6 +55,7 @@ function App() {
         </div>
       ),
     },
+
     {
       path: "/suggestion",
       element: (
@@ -67,6 +69,22 @@ function App() {
       element: (
         <div>
           <Friends />
+        </div>
+      ),
+    },
+    {
+      path: "/maingroup",
+      element: (
+        <div>
+          <MainGroupPage />
+        </div>
+      ),
+    },
+    {
+      path: "/creategroup",
+      element: (
+        <div>
+          <CreatGroup />
         </div>
       ),
     },
@@ -86,7 +104,6 @@ function App() {
         </div>
       ),
     },
-    
   ]);
   return (
     <div>

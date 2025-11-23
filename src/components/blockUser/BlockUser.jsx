@@ -1,10 +1,12 @@
-import { Link } from "react-router"
+import { data, Link } from "react-router"
 import { FaArrowLeft, FaSearch } from "react-icons/fa";
 import one from "../../assets/one.png";
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const BlockUser = () => {
 
+   const data = useSelector((state) => state.userInfo.value.user);
 
   const db = getDatabase();
   const blockRef = ref(db,"BlackList/")
@@ -14,8 +16,11 @@ const BlockUser = () => {
     onValue(blockRef,(snapshot)=> {
       let arr = []
       snapshot.forEach((item)=> {
-        console.log(item.val());
-        arr.push({...item.val(),unblockId: item.key})
+        console.log( item.val());
+        if (data.uid == item.val().blockerId) {
+           arr.push(item.val())
+        }
+       
       })
       setBlockList(arr)
     })
@@ -26,7 +31,7 @@ const BlockUser = () => {
   
 
   const handleUnblock = (item)=> {
-    remove(ref(db,"BlackList/" +item.unblockId))
+    remove(ref(db,"BlackList/"))
     console.log(item);
     
   }
@@ -70,7 +75,7 @@ const BlockUser = () => {
                   />
                   <div>
                     <h3 className="font-semibold text-sm sm:text-base text-black">
-                      {user.senderName}
+                      {user.blockName}
                     </h3>
                   </div>
                 </div>

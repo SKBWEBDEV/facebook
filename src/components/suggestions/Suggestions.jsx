@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 
 const Suggestions = () => {
   const data = useSelector((state) => state.userInfo.value.user);
+
+
   const db = getDatabase();
   const userRef = ref(db, "users/");
   const [list, setList] = useState([]);
@@ -67,7 +69,7 @@ const Suggestions = () => {
       let arr = []
       snapshot.forEach((item)=> {
         console.log(item.val());
-        arr.push(item.val().senderId + item.val().reciverId)
+        arr.push(data.uid + item.val().blockId )
       })
       setBlockList(arr)
     })
@@ -143,8 +145,7 @@ const Suggestions = () => {
                   <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
                     <button
                       onClick={() => friendRequest(user)}
-                      className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold cursor-pointer text-sm sm:text-base"
-                    >
+                      className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold cursor-pointer text-sm sm:text-base">
                       Add Friend
                     </button>
                     <button

@@ -1,18 +1,12 @@
 import one from "../../assets/one.png";
-import { FaSearch } from "react-icons/fa";
-// import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router";
 import { getDatabase, ref, onValue, push, set, remove } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Friends = () => {
-
   const data = useSelector((state) => state.userInfo.value.user);
-
-
-
   const db = getDatabase();
   const friendRef = ref(db, "RequestAccept/");
   const [friendList, setFriendList] = useState([]);
@@ -21,31 +15,23 @@ const Friends = () => {
     onValue(friendRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().reciverId  || data.uid == item.val().senderId) {
-          arr.push({...item.val(),blockId: item.key});
+        if (data.uid == item.val().reciverId || data.uid == item.val().senderId) {
+          arr.push({ ...item.val(), acceptId: item.key });
         }
-        
       });
       setFriendList(arr);
     });
   }, []);
 
-
-  const handleBlockUser = (item)=> {
-    console.log(item);
-    set(push(ref(db,"BlackList/")),{
-      reciverId:item.reciverId,
-      reciverName:item.reciverName,
-      senderId:item.senderId,
-      senderName:item.senderName,
-    })
-    remove(ref(db,"RequestAccept/" + item.blockId))
-  }
-
-
-
-
-
+  const handleBlockUser = (item) => {
+    set(push(ref(db, "BlackList/")), {
+      blockerId: data.uid,
+      blockerName: data.displayName,
+      blockId: item.senderId,
+      blockName: item.senderName,
+    });
+    remove(ref(db, "RequestAccept/" + item.acceptId));
+  };
 
   return (
     <div className="flex justify-center px-4 sm:px-6 md:px-10">
@@ -62,7 +48,7 @@ const Friends = () => {
           {/* Search Input */}
           <div className="flex items-center gap-2 sm:gap-4 mb-4">
             <input
-              className="border outline-0 pl-3 sm:pl-5 pr-24 sm:pr-40 py-2 sm:py-2.5 md:py-3 rounded-full bg-black/5 font-bold w-full"
+              className="border outline-0 pl-3 sm:pl-5 pr-20 sm:pr-36 md:pr-40 py-2 sm:py-2.5 md:py-3 rounded-full bg-black/5 font-bold w-full"
               type="text"
               placeholder="Search Friend's"
             />
@@ -70,13 +56,13 @@ const Friends = () => {
           </div>
 
           {/* Friend List */}
-          <div className="px-2 overflow-y-auto max-h-[400px] sm:max-h-[455px]">
+          <div className="px-2 overflow-y-auto max-h-[400px] sm:max-h-[455px] md:max-h-[500px]">
             {friendList.map((user, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center sm:flex-row justify-between sm:items-center mt-4 border-b border-gray-300 pb-3"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 border-b border-gray-300 pb-3"
               >
-                <div className="flex items-center gap-3 sm:gap-6 mb-2 sm:mb-0">
+                <div className="flex items-center gap-3 sm:gap-6 mb-2 sm:mb-0 w-full sm:w-auto">
                   <img
                     src={one}
                     alt="#"
@@ -84,19 +70,17 @@ const Friends = () => {
                   />
                   <div>
                     <h3 className="font-semibold text-sm sm:text-base text-black">
-                      {
-                        data.uid == user.reciverId ? user.senderName : user.reciverName
-                      }
+                      {data.uid == user.reciverId ? user.senderName : user.reciverName}
                     </h3>
                   </div>
                 </div>
 
-                <div className=" sm:text-3xl md:text-[20px] font-bold cursor-pointer">
-                  <button
-                  onClick={()=>handleBlockUser(user)}
-                  className="bg-black text-white px-5 py-1 rounded-lg hover:bg-amber-500 duration-300 cursor-pointer">
-                    block</button>
-                </div>
+                <button
+                  onClick={() => handleBlockUser(user)}
+                  className="bg-black text-white px-5 py-1 rounded-lg hover:bg-amber-500 duration-300 cursor-pointer text-sm sm:text-base"
+                >
+                  Block
+                </button>
               </div>
             ))}
           </div>

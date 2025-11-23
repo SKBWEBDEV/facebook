@@ -82,8 +82,7 @@ const UserList = () => {
               {requestList.map((user, index) => (
                 <div
                   key={index}
-                  className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-3 border-b border-gray-300 pb-3"
-                >
+                  className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-3 border-b border-gray-300 pb-3">
                   <div className="flex items-center gap-4">
                     <img src={one} alt="" className="h-12 w-12 sm:h-14 sm:w-14 rounded-full" />
                     <div>
@@ -95,8 +94,7 @@ const UserList = () => {
                     <button
                       onClick={() => confirmRequest(user)}
                       className="cursor-pointer py-2 px-6 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm 
-                      sm:text-base"
-                    >
+                      sm:text-base">
                       Confirm
                     </button>
                     <button className="px-6 sm:px-10 py-2 rounded-2xl bg-black/10 font-semibold text-sm sm:text-base cursor-pointer">
