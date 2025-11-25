@@ -58,7 +58,7 @@ const MainGroupPage = () => {
 
       {/* Tabs */}
       <div className="flex flex-wrap justify-center sm:justify-start py-6 gap-4">
-        {["yourGroup", "discover", "posts", "invites"].map((tab) => (
+        {["yourGroup", "discover", "posts",].map((tab) => (
           <p
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -108,23 +108,19 @@ const MainGroupPage = () => {
                   (user, idx) => (
                     <div
                       key={idx}
-                      className="flex  sm:flex-row items-center justify-between mt-4 border-b border-gray-300 pb-3"
-                    >
+                      className="flex  sm:flex-row items-center justify-between mt-4 border-b border-gray-300 pb-3">
                       <div className="flex items-center gap-3 sm:gap-6 mb-2 sm:mb-0">
                         <img
                           src={one}
                           alt="#"
-                          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full"
-                        />
+                          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full"/>
                         <h3 className="font-semibold text-sm sm:text-base text-black">
                           {user.groupName}
                         </h3>
                       </div>
                       <button
                         onClick={() =>
-                          
                              remveGroup(user)
-                           
                         }
                         className="bg-black text-white px-4 sm:px-5 py-1 rounded-lg hover:bg-amber-500 transition text-sm 
                         sm:text-base"
@@ -138,7 +134,7 @@ const MainGroupPage = () => {
             </div>
           )}
 
-          {activeTab === "posts" && (
+          {/* {activeTab === "posts" && (
             <div className="text-center text-2xl font-semibold py-20">
               Group Posts Section
             </div>
@@ -148,7 +144,7 @@ const MainGroupPage = () => {
             <div className="text-center text-2xl font-semibold py-20">
               Group Invites List
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
