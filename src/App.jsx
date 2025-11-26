@@ -12,7 +12,9 @@ import Log from "./components/log/Log";
 import BlockUser from "./components/blockUser/BlockUser";
 import MainGroupPage from "./components/maingroup/MainGroupPage";
 import CreatGroup from "./components/createGroup/CreatGroup";
-import Post from "./components/postpage/post";
+import PostName from "./components/postName/Poster"
+
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -31,7 +33,14 @@ function App() {
         </div>
       ),
     },
-
+    {
+      path: "/post",
+      element: (
+        <div>
+          <PostName />
+        </div>
+      ),
+    },
     {
       path: "/login",
       element: (
@@ -56,14 +65,7 @@ function App() {
         </div>
       ),
     },
-    {
-      path: "/post",
-      element: (
-        <div>
-          <Post />
-        </div>
-      ),
-    },
+  
 
     {
       path: "/suggestion",
