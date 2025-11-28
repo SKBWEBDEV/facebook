@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import { getDatabase, ref, set } from "firebase/database";
+import { motion } from "framer-motion";
 
 const Sign = () => {
   const [email, setEmail] = useState("");
@@ -43,6 +44,35 @@ const Sign = () => {
     }
   };
 
+
+  // Animation variants
+const titleVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  },
+  hover: {
+    scale: 1.03,
+    transition: { duration: 0.2 }
+  }
+};
+
+const textVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut", delay: 0.2 }
+  }
+};
+
+
+
+
+
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center px-5 sm:px-10 lg:px-32 py-10 gap-10">
 
@@ -50,15 +80,30 @@ const Sign = () => {
       <ToastContainer position="top-center" autoClose={5000} theme="colored" transition={Slide} />
 
       {/* LEFT SECTION */}
-      <div className="text-center md:text-left max-w-md space-y-4">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#0866FF]">
-          Facebook
-        </h1>
+<div className="text-center md:text-left max-w-md space-y-4 flex flex-col items-center md:items-start">
 
-        <p className="text-base sm:text-lg md:text-xl mt-4 leading-relaxed">
-          Facebook helps you connect and share with the people in your life.
-        </p>
-      </div>
+  <motion.h1
+    className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#0866FF]"
+    variants={titleVariants}
+    initial="hidden"
+    animate="show"
+    whileHover="hover"
+  >
+    Facebook
+  </motion.h1>
+
+  <motion.p
+    className="text-sm sm:text-base md:text-xl mt-2 sm:mt-3 md:mt-4 leading-relaxed text-gray-700"
+    variants={textVariants}
+    initial="hidden"
+    animate="show"
+  >
+    Facebook helps you connect and share with the people in your life.
+  </motion.p>
+
+</div>
+
+
 
       {/* RIGHT SECTION */}
       <div className="w-full max-w-md shadow-lg p-6 rounded-2xl border">
