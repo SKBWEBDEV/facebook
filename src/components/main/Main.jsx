@@ -20,11 +20,8 @@ const Main = () => {
   const navigate = useNavigate();
   const auth = getAuth();
 
-  
-
   const [verify, setVerify] = useState(false);
   const [loading, setLoading] = useState(true);
-  
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -37,41 +34,35 @@ const Main = () => {
     if (!data) navigate("/login");
   }, [data, navigate]);
 
+  const db = getDatabase();
+  const postRef = ref(db, "YourPost/");
+  const [okey, setOkey] = useState([]);
 
-    const db = getDatabase();
-const postRef = ref(db,"YourPost/")
-const [okey,setOkey] = useState ([])
+  useEffect(() => {
+    onValue(postRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        console.log(item.val());
 
-useEffect(()=> {
-  onValue(postRef, (snapshot) => {
-    let arr = [];
-    snapshot.forEach((item) => {
-      console.log(item.val());
-
-       if (item.postId == data.uid) {
-        arr.push({...item.val(), removeId : item.key});
-      }
-      
+        if (item.postId == data.uid) {
+          arr.push({ ...item.val(), removeId: item.key });
+        }
+      });
+      setOkey(arr);
     });
-    setOkey(arr)
-  });
+  }, []);
+  console.log(okey);
 
-  
-},[])
-console.log(okey);
+  const [showState, setShowState] = useState({});
 
-
-const removePost = (item)=> {
-  remove(ref(db,"YourPost/" + item.removeId))
-}
-
-
-
-
+  const handleShow = (id) => {
+    setShowState((prev) => ({
+      ...prev,
+      [id]: !prev[id], 
+    }));
+  };
 
   if (loading) return null;
-
-
 
   return (
     <div className="text-center bg-[#F2F4F7]">
@@ -123,11 +114,13 @@ const removePost = (item)=> {
               </p>
             </div>
             <div className="flex-1 w-full md:w-auto">
-              <Link to="/post"><input
-                type="text"
-                placeholder="What's on your mind"
-                className="border outline-0 py-2 sm:py-3 md:py-4 rounded-full bg-black/5 text-black w-full md:w-[500px] px-4 md:px-8"
-              /></Link>
+              <Link to="/post">
+                <input
+                  type="text"
+                  placeholder="What's on your mind"
+                  className="border outline-0 py-2 sm:py-3 md:py-4 rounded-full bg-black/5 text-black w-full md:w-[500px] px-4 md:px-8"
+                />
+              </Link>
             </div>
             <div className="flex flex-col items-center gap-1">
               <MdPhotoLibrary className="text-2xl sm:text-3xl md:text-4xl cursor-pointer text-green-600" />
@@ -135,27 +128,57 @@ const removePost = (item)=> {
             </div>
           </div>
           {/* ---------------------show post------------------------------------------------------------------ */}
-         <div className="flex flex-col items-center w-full max-w-[900px] py-5 mx-auto">
-        {okey.map((user) => (
-          <div className="w-full bg-white shadow-2xl rounded-lg mb-5" key={user.removeId}>
-            <div className="flex  md:flex-row items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-3">
-                <img className="h-10 w-10 sm:h-12 sm:w-12 rounded-full" src={one} alt="" />
-                <p className="font-bold text-[18px] truncate">{user?.postMan}</p>
-              </div>
+          <div className="flex flex-col items-center w-full max-w-[900px] py-5 mx-auto">
+  {okey.map((user) => (
+    <div
+      key={user.removeId}
+      className="w-full bg-white shadow-2xl rounded-lg mb-5 overflow-hidden">
+      
+      {showState[user.removeId] ? (
+        <div className="flex justify-end px-4 py-3">
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition cursor-pointer font-semibold"
+            onClick={() => handleShow(user.removeId)}
+          >
+            Undo
+          </button>
+        </div>
+      ) : (
+        <div>
+          {/* Post Header */}
+          <div className="flex  sm:flex-row items-start sm:items-center justify-between px-4 py-3 gap-3">
+            <div className="flex items-center gap-3">
+              <img
+                className="h-10 w-10 sm:h-12 sm:w-12 rounded-full"
+                src={one}
+                alt=""
+              />
+              <p className="font-bold text-[16px] sm:text-[18px] truncate">
+                {user.postMan}
+              </p>
+            </div>
+
+            {/* Remove Button */}
+            <div className="mt-2 sm:mt-0 sm:ml-auto">
               <button
-                onClick={() => removePost(user)}
-                className="mt-2 md:mt-0 text-red-500 hover:text-red-700"
+                className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition cursor-pointer font-semibold"
+                onClick={() => handleShow(user.removeId)}
               >
-                <RxCross1 className="text-2xl sm:text-3xl md:text-4xl" />
+                Remove
               </button>
             </div>
-            <div className="px-4 pb-4">
-              <p className="py-2 text-left">{user.post}</p>
-            </div>
           </div>
-        ))}
-      </div>
+
+          {/* Post Content */}
+          <div className="px-4 pb-4">
+            <p className="text-left text-sm sm:text-base">{user.post}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
         </div>
       ) : (
         <div className="bg-black h-screen flex justify-center items-center text-white px-4">

@@ -3,10 +3,12 @@ import google from "../../assets/google.png";
 import { Link, useNavigate } from "react-router";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Slide, ToastContainer, toast } from "react-toastify";
-import { motion } from "motion/react";
 import { useDispatch } from "react-redux";
 import { userInfo } from "../slicess/counterSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+
 
 const Log = () => {
   const provider = new GoogleAuthProvider();
@@ -60,6 +62,32 @@ const Log = () => {
       .then((user) => console.log(user))
       .catch((error) => console.log(error));
   };
+  
+
+
+  const titleVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  },
+  hover: {
+    scale: 1.03,
+    transition: { duration: 0.2 }
+  }
+};
+
+const textVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut", delay: 0.2 }
+  }
+};
+
+
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-20 gap-10">
@@ -78,14 +106,28 @@ const Log = () => {
       />
 
       {/* Left Content */}
-      <div className="text-center md:text-left max-w-md md:max-w-lg">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#0866FF]">
-          Facebook
-        </h1>
-        <p className="text-base sm:text-lg md:text-xl mt-4">
-          Facebook helps you connect and share with the people in your life.
-        </p>
-      </div>
+      <div className="text-center md:text-left max-w-md space-y-4 flex flex-col items-center md:items-start">
+
+  <motion.h1
+    className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#0866FF]"
+    variants={titleVariants}
+    initial="hidden"
+    animate="show"
+    whileHover="hover"
+  >
+    Facebook
+  </motion.h1>
+
+  <motion.p
+    className="text-sm sm:text-base md:text-xl mt-2 sm:mt-3 md:mt-4 leading-relaxed text-gray-700"
+    variants={textVariants}
+    initial="hidden"
+    animate="show"
+  >
+    Facebook helps you connect and share with the people in your life.
+  </motion.p>
+
+</div>
 
       {/* Right Form */}
       <div className="shadow-xl/30 py-10 px-6 sm:px-12 md:px-20 rounded-3xl w-full max-w-md">
