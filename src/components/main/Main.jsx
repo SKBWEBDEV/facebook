@@ -92,7 +92,7 @@ const Main = () => {
               <Link to="/user">
                 <LiaUserFriendsSolid className="hover:text-[#0866FF] duration-500 cursor-pointer flex-shrink-0" />
               </Link>
-              <LiaFacebookMessenger className="hover:text-[#0866FF] duration-500 cursor-pointer flex-shrink-0" />
+              <Link to = "/sideber"><LiaFacebookMessenger className="hover:text-[#0866FF] duration-500 cursor-pointer flex-shrink-0" /></Link>
               <MdOndemandVideo className="hover:text-[#0866FF] duration-500 cursor-pointer flex-shrink-0" />
               <Link to="/maingroup">
                 <HiUserGroup className="hover:text-[#0866FF] duration-500 cursor-pointer flex-shrink-0" />

@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 const Suggestions = () => {
   const data = useSelector((state) => state.userInfo.value.user);
 
-
   const db = getDatabase();
   const userRef = ref(db, "users/");
   const [list, setList] = useState([]);
@@ -25,6 +24,31 @@ const Suggestions = () => {
       setList(arr);
     });
   }, [data.uid]);
+
+  // console.log(list);
+
+  // -------------search part start--------------
+
+  const [searchList, setSearchList] = useState([]);
+
+  const handleSearch = (event) => {
+    let arr = [];
+    if (event.target.value.length == 0) {
+      setSearchList([]);
+    } else {
+      list.filter((item) => {
+        if (
+          item.username.toLowerCase().includes(event.target.value.toLowerCase())
+        ) {
+          arr.push(item);
+          setSearchList(arr);
+        }
+      });
+    }
+  };
+  console.log(searchList);
+
+  // -------------search part end--------------
 
   const friendRequest = (item) => {
     push(ref(db, "FriendRequest/"), {
@@ -59,29 +83,24 @@ const Suggestions = () => {
     });
   }, []);
 
+  const blockRef = ref(db, "BlackList/");
+  const [blockList, setBlockList] = useState([]);
 
-
-  const blockRef = ref(db,"BlackList/")
-  const [blockList,setBlockList] = useState ([])
-
-  useEffect(()=> {
-    onValue(blockRef,(snapshot)=> {
-      let arr = []
-      snapshot.forEach((item)=> {
+  useEffect(() => {
+    onValue(blockRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
         console.log(item.val());
-        arr.push(data.uid + item.val().blockId )
-      })
-      setBlockList(arr)
-    })
-  },[])
-  console.log(blockList);
+        arr.push(data.uid + item.val().blockId);
+      });
+      setBlockList(arr);
+    });
+  }, []);
+  // console.log(blockList);
 
-
-  const handleRemove = (item)=> {
-    remove(ref(db,"users/" +item.userid))
-  }
-
-
+  const handleRemove = (item) => {
+    remove(ref(db, "users/" + item.userid));
+  };
 
   return (
     <div className="flex justify-center px-4 sm:px-6 md:px-10">
@@ -89,74 +108,156 @@ const Suggestions = () => {
         <div className="py-4 px-4 sm:px-6 font-third">
           {/* Header */}
           <div className="  sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            
-            <div className="flex  items-center gap-2 sm:gap-5 font-bold text-sm sm:text-base">
-              <Link to="/user">
-                <FaArrowLeft className="text-lg sm:text-2xl" />
-              </Link>
-              <p className="">Suggestion</p>
+            <div className="flex items-center justify-between">
+              <div className="flex  items-center gap-2 sm:gap-5 font-bold text-sm sm:text-base">
+                <Link to="/user">
+                  <FaArrowLeft className="text-lg sm:text-2xl" />
+                </Link>
+                <p className="">Suggestion</p>
+              </div>
+
+              <div className="w-full max-w-[400px] mx-auto px-2 sm:px-0">
+                <input
+                  onChange={handleSearch}
+                  className="w-full sm:w-full border px-4 sm:px-7 py-2 rounded-lg outline-none"
+                  type="text"
+                  placeholder="Search people"
+                />
+              </div>
             </div>
 
             <div className=" mt-7 justify-between w-full sm:w-auto">
-              <p className="text-base sm:text-lg font-semibold">People you may know</p>
+              <p className="text-base sm:text-lg font-semibold">
+                People you may know
+              </p>
             </div>
           </div>
 
           {/* User List */}
           <div className="px-2 overflow-y-auto max-h-[400px] sm:max-h-[455px]">
-            {list.map((user, index) => (
-              <div
-                key={index}
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 border-b border-gray-300 pb-3"
-              >
-                <div className="flex items-center gap-3 sm:gap-6">
-                  <img src={one} alt="" className="h-12 w-12 sm:h-14 sm:w-14 rounded-full" />
-                  <div>
-                    <h3 className="font-semibold text-sm sm:text-base text-black">{user.username}</h3>
-                  </div>
-                </div>
+            {searchList.length == 0
+              ? list.map((user, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 border-b border-gray-300 pb-3"
+                  >
+                    <div className="flex items-center gap-3 sm:gap-6">
+                      <img
+                        src={one}
+                        alt=""
+                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-full"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-sm sm:text-base text-black">
+                          {user.username}
+                        </h3>
+                      </div>
+                    </div>
 
-                {/* Buttons */}
-                {
+                    {/* Buttons */}
+                    {blockList.includes(data.uid + user.userid) ||
+                    blockList.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          block
+                        </button>
+                      </div>
+                    ) : friend.includes(data.uid + user.userid) ||
+                      friend.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          Friend
+                        </button>
+                      </div>
+                    ) : sentRequest.includes(data.uid + user.userid) ||
+                      sentRequest.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          Sent Request
+                        </button>
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm sm:text-base">
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button
+                          onClick={() => friendRequest(user)}
+                          className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold cursor-pointer text-sm sm:text-base"
+                        >
+                          Add Friend
+                        </button>
+                        <button
+                          onClick={() => handleRemove(user)}
+                          className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm cursor-pointer sm:text-base"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              : searchList.map((user, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 border-b border-gray-300 pb-3"
+                  >
+                    <div className="flex items-center gap-3 sm:gap-6">
+                      <img
+                        src={one}
+                        alt=""
+                        className="h-12 w-12 sm:h-14 sm:w-14 rounded-full"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-sm sm:text-base text-black">
+                          {user.username}
+                        </h3>
+                      </div>
+                    </div>
 
-                   blockList.includes(data.uid + user.userid) || blockList.includes(user.userid + data.uid) ? (
-                  <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
-                    <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
-                      block
-                    </button>
+                    {/* Buttons */}
+                    {blockList.includes(data.uid + user.userid) ||
+                    blockList.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          block
+                        </button>
+                      </div>
+                    ) : friend.includes(data.uid + user.userid) ||
+                      friend.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          Friend
+                        </button>
+                      </div>
+                    ) : sentRequest.includes(data.uid + user.userid) ||
+                      sentRequest.includes(user.userid + data.uid) ? (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
+                          Sent Request
+                        </button>
+                        <button className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm sm:text-base">
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
+                        <button
+                          onClick={() => friendRequest(user)}
+                          className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold cursor-pointer text-sm sm:text-base"
+                        >
+                          Add Friend
+                        </button>
+                        <button
+                          onClick={() => handleRemove(user)}
+                          className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm cursor-pointer sm:text-base"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
                   </div>
-                ) :
-                friend.includes(data.uid + user.userid) || friend.includes(user.userid + data.uid) ? (
-                  <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
-                    <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
-                      Friend
-                    </button>
-                  </div>
-                ) : sentRequest.includes(data.uid + user.userid) || sentRequest.includes(user.userid + data.uid) ? (
-                  <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
-                    <button className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold text-sm sm:text-base">
-                      Sent Request
-                    </button>
-                    <button className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm sm:text-base">
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-2 sm:gap-4 mt-2 sm:mt-0 flex-wrap">
-                    <button
-                      onClick={() => friendRequest(user)}
-                      className="py-2 px-4 sm:px-10 rounded-2xl bg-[#0866FF] text-white font-semibold cursor-pointer text-sm sm:text-base">
-                      Add Friend
-                    </button>
-                    <button
-                    onClick={()=> handleRemove (user)}
-                    className="py-2 px-4 sm:px-10 rounded-2xl bg-black/10 font-semibold text-sm cursor-pointer sm:text-base">
-                      Remove
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+                ))}
           </div>
         </div>
       </div>

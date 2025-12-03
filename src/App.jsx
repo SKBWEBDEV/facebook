@@ -13,6 +13,7 @@ import BlockUser from "./components/blockUser/BlockUser";
 import MainGroupPage from "./components/maingroup/MainGroupPage";
 import CreatGroup from "./components/createGroup/CreatGroup";
 import PostName from "./components/postName/Poster"
+import SideBer from "./components/sideber/SideBer";
 
 
 function App() {
@@ -80,6 +81,14 @@ function App() {
       element: (
         <div>
           <Friends />
+        </div>
+      ),
+    },
+    {
+      path: "/sideber",
+      element: (
+        <div>
+          <SideBer />
         </div>
       ),
     },
