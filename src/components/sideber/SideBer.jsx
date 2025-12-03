@@ -73,21 +73,26 @@ const SideBer = () => {
   const sakibref = ref(db, "massage");
 
   useEffect(() => {
+  const sakibref = ref(db, "massage");
+
+  const unsubscribe = onValue(sakibref, (snapshot) => {
     let arr = [];
-    onValue(sakibref, (snapshot) => {
-      snapshot.forEach((item) => {
-        if (
-          (data.uid == item.val().senderId &&
-            ratul.id == item.val().reciverId) ||
-          (data.uid == item.val().reciverId &&
-            ratul.id == item.val().senderId)
-        )
-          arr.push(item.val());
-      });
-      setSakib(arr);
+    snapshot.forEach((item) => {
+      const val = item.val();
+      if (
+        (data.uid === val.senderId && ratul.id === val.reciverId) ||
+        (data.uid === val.reciverId && ratul.id === val.senderId)
+      ) {
+        arr.push(val);
+      }
     });
     setSakib(arr);
-  }, [ratul?.id]);
+  });
+
+  // Cleanup listener to avoid duplicate subscriptions
+  return () => unsubscribe();
+}, [ratul?.id, data.uid]);
+
 
   return (
     <div className="flex flex-col items-center px-2 sm:px-4 lg:px-0">
@@ -157,7 +162,7 @@ const SideBer = () => {
                     <p className="py-2 px-3 bg-black text-white max-w-[250px] sm:max-w-[300px] rounded-lg text-left break-words">
                       {user?.msg}
                     </p>
-                    <div className="absolute bottom-[-2px] right-[-7px]">
+                    <div className="absolute bottom-[-1px] right-[-5px]">
                       <BsFillTriangleFill className="text-black" />
                     </div>
                   </div>
@@ -173,7 +178,7 @@ const SideBer = () => {
                   <div className="bg-gray-200 max-w-[250px] sm:max-w-[300px] rounded-lg px-3 py-2">
                     <p className="break-words text-left">{user?.msg}</p>
                   </div>
-                  <div className="absolute bottom-[-2px] left-[-7px]">
+                  <div className="absolute bottom-[-1px] left-[-5px]">
                     <BsFillTriangleFill className="text-gray-200" />
                   </div>
                 </div>
