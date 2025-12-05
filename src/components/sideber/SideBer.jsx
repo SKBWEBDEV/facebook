@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { massage } from "../massageSlice/MassageSlice";
 
-import moment from "moment";
+import moment from "moment"
+
+import EmojiPicker from 'emoji-picker-react';
 
 // --- same imports and logic (UNCHANGED) --- //
 
@@ -92,6 +94,14 @@ const SideBer = () => {
   // Cleanup listener to avoid duplicate subscriptions
   return () => unsubscribe();
 }, [ratul?.id, data.uid]);
+
+
+
+const [emoji,setEmoji] = useState (false)
+
+const hanldeEmoji = (emoji)=> {
+      setSent((okey)=> okey + emoji.emoji)
+    }
 
 
   return (
@@ -190,13 +200,23 @@ const SideBer = () => {
 
         {/* Input Box */}
         <div className="relative mt-6 border-t border-black/20 pt-6 flex items-center">
+        <div className="absolute md:bottom-[80px]  md:left-60 left-0 w-[50px] bottom-20">
+                {
+                  emoji && 
+            <EmojiPicker onEmojiClick={hanldeEmoji}/>
+                }
+              </div>
           <input
             onChange={handleMassageSent}
             value={sent}
             className="bg-gray-100 outline-none w-full px-4 py-2 h-[45px] rounded-lg"
             placeholder="Type a message..."/>
 
-          <MdEmojiEmotions className="absolute right-28 md:right-35 text-gray-500 text-xl cursor-pointer" />
+          <span
+          onClick={()=> setEmoji (!emoji)}
+          className="absolute right-28 md:right-35 text-gray-500 text-xl cursor-pointer" >
+            <MdEmojiEmotions />
+          </span>
           <FaCamera className="absolute right-20 md:right-25 text-gray-500 text-xl cursor-pointer" />
 
           <button
