@@ -200,7 +200,7 @@ const hanldeEmoji = (emoji)=> {
 
         {/* Input Box */}
         <div className="relative mt-6 border-t border-black/20 pt-6 flex items-center">
-        <div className="absolute md:bottom-[80px]  md:left-60 left-0 w-[50px] bottom-20">
+        <div className="absolute md:bottom-[80px]  md:left-60 right-[-8px] bottom-[70px]">
                 {
                   emoji && 
             <EmojiPicker onEmojiClick={hanldeEmoji}/>
