@@ -14,6 +14,7 @@ import MainGroupPage from "./components/maingroup/MainGroupPage";
 import CreatGroup from "./components/createGroup/CreatGroup";
 import PostName from "./components/postName/Poster"
 import SideBer from "./components/sideber/SideBer";
+import Setting from "./components/setting/Setting";
 
 
 function App() {
@@ -121,6 +122,14 @@ function App() {
       element: (
         <div>
           <Logout />
+        </div>
+      ),
+    },
+    {
+      path: "/setting",
+      element: (
+        <div>
+          <Setting />
         </div>
       ),
     },

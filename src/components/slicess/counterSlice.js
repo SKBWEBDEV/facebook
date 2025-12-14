@@ -13,11 +13,21 @@ export const messageSlice = createSlice({
       console.log(actions.payload);
       state.value = actions.payload
       
+    },
+    userNameUpdate : (state,actions) => {
+      if (state.value && state.value.user) {
+        state.value.user.displayName = actions.payload
+      }
+    },
+    userUpdateStatus : (state,actions) => {
+      if (state.value && state.value.user) {
+        state.value.user.displayName = actions.payload
+      }
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { userInfo } = messageSlice.actions
+export const { userInfo,userNameUpdate,userUpdateStatus } = messageSlice.actions
 
 export default messageSlice.reducer
